@@ -1,0 +1,217 @@
+import os
+
+# Conteúdo do HTML com CSS embutido
+html_content = """
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Alura do Blues - Dashboard Flow</title>
+    <style>
+        :root {
+            --neon-blue: #00d4ff;
+            --neon-purple: #9d00ff;
+            --glass-bg: rgba(0, 0, 0, 0.7);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: url('imagem.png') no-repeat center center fixed;
+            background-size: cover;
+            color: white;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* Overlay para melhorar legibilidade */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 1;
+        }
+
+        .container {
+            position: relative;
+            z-index: 2;
+            width: 90%;
+            max-width: 1200px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            padding: 40px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 50px rgba(0, 212, 255, 0.2);
+        }
+
+        .video-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            height: 0;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid var(--neon-blue);
+            box-shadow: 0 0 20px var(--neon-blue);
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .player-section {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, var(--neon-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .music-player {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+
+        .track-info {
+            margin-bottom: 20px;
+        }
+
+        .track-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            display: block;
+        }
+
+        .artist-name {
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+
+        audio {
+            width: 100%;
+            filter: invert(100%) hue-rotate(180deg) brightness(1.5);
+        }
+
+        .lyrics-box {
+            margin-top: 20px;
+            height: 200px;
+            overflow-y: auto;
+            text-align: left;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: #ccc;
+        }
+
+        /* Custom Scrollbar */
+        .lyrics-box::-webkit-scrollbar {
+            width: 5px;
+        }
+        .lyrics-box::-webkit-scrollbar-thumb {
+            background: var(--neon-blue);
+            border-radius: 10px;
+        }
+
+        @media (max-width: 900px) {
+            .container {
+                grid-template-columns: 1fr;
+                height: 90vh;
+                overflow-y: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="video-section">
+            <h2>Tutorial: Avaliação Diagnóstica</h2>
+            <div class="video-container">
+                <iframe 
+                    src="https://www.youtube.com/embed/9U4TO65DjgY" 
+                    title="YouTube video player" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+            <p style="color: #888; font-size: 0.8rem;">Vídeo base para a transcrição técnica.</p>
+        </div>
+
+        <div class="player-section">
+            <h1>A Alura do Blues</h1>
+            <p>Dashboard Flow System</p>
+
+            <div class="music-player">
+                <div class="track-info">
+                    <span class="track-name">O Blues do Dashboard</span>
+                    <span class="artist-name">AI Blues Band feat. Suno</span>
+                </div>
+                
+                <audio controls>
+                    <source src="musica.mp3" type="audio/mpeg">
+                    Seu navegador não suporta o elemento de áudio.
+                </audio>
+
+                <div class="lyrics-box">
+                    <strong>[Verse 1]</strong><br>
+                    Liguei o computador, mais um dia de manhã<br>
+                    Entrei na minha conta da Alura, tentando manter a mente sã...<br><br>
+                    <strong>[Chorus]</strong><br>
+                    Oh, eu vou fazer a minha Avaliação Diagnóstica<br>
+                    De inteligência artificial, de forma bem metódica...<br><br>
+                    <strong>[Bridge]</strong><br>
+                    E quando o peso sai do ombro, e a tela diz que acabou<br>
+                    Eu vou lá no meu histórico, confirmar por onde eu vou!
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
+"""
+
+with open("index.html", "w", encoding="utf-8") as f:
+    f.write(html_content)
+
+print("Site gerado com sucesso!")
