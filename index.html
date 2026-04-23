@@ -7,8 +7,6 @@
     <style>
         :root {
             --neon-blue: #00d4ff;
-            --neon-purple: #9d00ff;
-            --panel-bg: rgba(0, 0, 0, 0.85);
         }
 
         * {
@@ -28,10 +26,9 @@
             justify-content: center;
             align-items: center;
             overflow: hidden;
-            perspective: 2000px; /* Profundidade para o efeito 3D do vídeo */
+            perspective: 2000px; 
         }
 
-        /* Overlay escuro para dar contraste com os neons */
         body::before {
             content: '';
             position: absolute;
@@ -44,20 +41,18 @@
             z-index: 1;
         }
 
-        /* --- PLAYER DE ÁUDIO (Topo) --- */
+        /* --- PLAYER DE ÁUDIO (Agora Transparente) --- */
         .audio-top-panel {
             position: absolute;
             top: 20px;
             z-index: 10;
-            background: var(--panel-bg);
-            border: 1px solid var(--neon-blue);
-            padding: 10px 25px;
-            border-radius: 50px;
-            box-shadow: 0 0 15px rgba(0, 212, 255, 0.5);
+            /* Fundo totalmente transparente e sem bordas */
+            background: transparent;
+            border: none;
+            box-shadow: none;
             display: flex;
             flex-direction: column;
             align-items: center;
-            backdrop-filter: blur(5px);
         }
 
         .track-info-top {
@@ -67,30 +62,31 @@
             margin-bottom: 5px;
             text-transform: uppercase;
             letter-spacing: 1px;
+            text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.9); /* Sombra para o texto não sumir no fundo */
         }
 
         .audio-top-panel audio {
             height: 30px;
-            filter: invert(100%) hue-rotate(180deg) brightness(1.5);
+            /* Inverte as cores e aplica uma leve opacidade para mesclar com o fundo */
+            filter: invert(100%) hue-rotate(180deg) brightness(1.5) opacity(0.85);
         }
 
-        /* --- VÍDEO DO YOUTUBE (Ajustado na Arte 3D) --- */
+        /* --- VÍDEO DO YOUTUBE --- */
         .video-3d-container {
             position: absolute;
-            /* Coordenadas e tamanho para casar com o monitor da arte */
-            top: 22.5%; 
-            left: 42.5%; 
+            /* AJUSTE AQUI: Aumentei o top (desce) e diminuí o left (vai para a esquerda) */
+            top: 26%; 
+            left: 39.5%; 
             width: 310px; 
             height: 175px; 
             z-index: 5;
             
-            /* A MÁGICA 3D: Inclinação e distorção */
             transform: rotateY(-22deg) rotateX(10deg) skewY(-1deg);
             transform-style: preserve-3d;
             
-            border: 2px solid rgba(0, 212, 255, 0.7);
+            border: 2px solid rgba(0, 212, 255, 0.5); /* Borda mais discreta */
             border-radius: 4px;
-            box-shadow: 0 0 30px rgba(0, 212, 255, 0.8);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.6);
             background: black;
             overflow: hidden;
         }
@@ -101,47 +97,6 @@
             border: none;
             opacity: 0.93; 
         }
-
-        /* --- PAINEL DE LETRAS --- */
-        .lyrics-panel {
-            position: absolute;
-            bottom: 40px;
-            right: 40px;
-            width: 320px;
-            height: 220px;
-            background: rgba(0, 0, 0, 0.7);
-            border-left: 4px solid var(--neon-purple);
-            border-radius: 8px;
-            padding: 20px;
-            color: #ccc;
-            font-size: 0.9rem;
-            line-height: 1.5;
-            overflow-y: auto;
-            backdrop-filter: blur(10px);
-            z-index: 10;
-        }
-
-        .lyrics-panel::-webkit-scrollbar { width: 5px; }
-        .lyrics-panel::-webkit-scrollbar-thumb { background: var(--neon-purple); border-radius: 5px; }
-        
-        h1.panel-title {
-            color: var(--neon-purple);
-            font-size: 1.2rem;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-        }
-
-        /* Classe que o JS vai usar para destacar a letra atual */
-        .lyric-line {
-            transition: color 0.3s, text-shadow 0.3s;
-            margin-bottom: 8px;
-        }
-        .lyric-line.active {
-            color: var(--neon-blue);
-            text-shadow: 0 0 8px rgba(0, 212, 255, 0.8);
-            font-weight: bold;
-        }
-
     </style>
 </head>
 <body>
@@ -163,46 +118,6 @@
             allowfullscreen>
         </iframe>
     </div>
-
-    <div class="lyrics-panel" id="caixa-letras">
-        <h1 class="panel-title">Letras e Tags</h1>
-        
-        <div class="lyric-line" data-time="0"><strong>[Verse 1]</strong></div>
-        <div class="lyric-line" data-time="2">Liguei o computador, mais um dia de manhã</div>
-        <div class="lyric-line" data-time="6">Entrei na minha conta da Alura, tentando manter a mente sã...</div>
-        
-        <div class="lyric-line" data-time="12"><br><strong>[Chorus]</strong></div>
-        <div class="lyric-line" data-time="14">Oh, eu vou fazer a minha Avaliação Diagnóstica</div>
-        <div class="lyric-line" data-time="18">De inteligência artificial, de forma bem metódica...</div>
-    </div>
-
-    <script>
-        const player = document.getElementById('player-musica');
-        const linhasLetra = document.querySelectorAll('.lyric-line');
-
-        // Escuta a música tocando para atualizar a letra
-        player.addEventListener('timeupdate', () => {
-            const tempoAtual = player.currentTime;
-            let indiceAtivo = -1;
-
-            // Descobre qual linha deve estar acesa com base nos segundos (data-time)
-            linhasLetra.forEach((linha, index) => {
-                const tempoLinha = parseFloat(linha.getAttribute('data-time'));
-                if (tempoAtual >= tempoLinha) {
-                    indiceAtivo = index;
-                }
-            });
-
-            // Aplica o efeito de "brilho" apenas na linha correta
-            linhasLetra.forEach((linha, index) => {
-                if (index === indiceAtivo) {
-                    linha.classList.add('active');
-                } else {
-                    linha.classList.remove('active');
-                }
-            });
-        });
-    </script>
 
 </body>
 </html>
